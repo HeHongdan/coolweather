@@ -1,3 +1,8 @@
+.DS_Store
+.cxx
+
+
+
 # Built application files
 *.apk
 *.ap_
@@ -34,9 +39,11 @@ captures/
 
 # IntelliJ
 *.iml
+/.idea/modules.xml
 .idea/workspace.xml
 .idea/tasks.xml
 .idea/gradle.xml
+.idea/navEditor.xml
 .idea/assetWizardSettings.xml
 .idea/dictionaries
 .idea/libraries
