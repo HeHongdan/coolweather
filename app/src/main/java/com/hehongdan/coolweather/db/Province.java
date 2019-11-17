@@ -9,7 +9,7 @@ import lombok.Data;
  * @version v2019/11/16
  * @date 2019/11/16
  */
-@Data
+@Data//Lombok插件3/3
 public class Province {
 
     private int id;
