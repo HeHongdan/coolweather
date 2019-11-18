@@ -1,5 +1,7 @@
 package com.hehongdan.coolweather.db;
 
+import org.litepal.crud.DataSupport;
+
 import lombok.Data;
 
 /**
@@ -10,7 +12,7 @@ import lombok.Data;
  * @date 2019/11/16
  */
 @Data//Lombok插件3/3
-public class Province {
+public class Province extends DataSupport {
 
     private int id;
 

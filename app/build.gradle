@@ -23,17 +23,28 @@ android {
 
     /** 签名的配置 */
     signingConfigs {
+        //加载签名文件资源
+        Properties properties = new Properties()
+        InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream()
+        properties.load(inputStream)
+        //读取文件和字段
+        def store_path = properties.getProperty('store.dir')
+        def store_file =file(store_path)
+        def store_password = properties.getProperty('store.password')
+        def key_alias = properties.getProperty('alias.name')
+        def key_password = properties.getProperty('alias.pass')
+
         releaseConfig {
-            storeFile file(KEY_PATH)//签名文件
-            storePassword KEY_PASS//证书文件的密码
-            keyAlias ALIAS_NAME//证书密钥别名
-            keyPassword ALIAS_PASS//证书改密钥的密码
+            storeFile store_file//签名文件
+            storePassword store_password//证书文件的密码
+            keyAlias key_alias//证书密钥别名
+            keyPassword key_password//证书改密钥的密码
         }
         debugConfig {
-            storeFile file(KEY_PATH)
-            storePassword KEY_PASS
-            keyAlias ALIAS_NAME
-            keyPassword ALIAS_PASS
+            storeFile store_file
+            storePassword store_password
+            keyAlias key_alias
+            keyPassword key_password
         }
     }
 
