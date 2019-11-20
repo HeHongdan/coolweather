@@ -3,6 +3,7 @@ package com.hehongdan.coolweather.db;
 import org.litepal.crud.DataSupport;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 类描述：省份。
@@ -11,7 +12,8 @@ import lombok.Data;
  * @version v2019/11/16
  * @date 2019/11/16
  */
-@Data//Lombok插件3/3
+@Data//3/3Lombok插件
+@EqualsAndHashCode(callSuper = false)
 public class Province extends DataSupport {
 
     private int id;

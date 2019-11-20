@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--适配API28(Android9.0-P 网络通信默认为TLS)以后版本HTTP-->
+<network-security-config>
+    <!--1/3可信证书颁发机构-->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <!--1-1/3信任锚是安装的系统CA证书，称为“system”-->
+            <certificates src="system" />
+            <!--1-2/3信任锚用户安装的证书，称为“user”；放开网络的user权限-->
+            <!--<certificates src="user" />-->
+            <!--1-3/3设置自定义信任锚-->
+            <!--<certificates src="@raw/my_custom_ca"/>-->
+        </trust-anchors>
+    </base-config>
+
+    <!--2/3实施证书锁定-->
+    <!--<domain-config>
+        <domain includeSubdomains="true">example.com</domain>
+        <pin-set expiration="2018-01-01">
+            <pin digest="SHA-256">7HIpactkIAq2Y49orFOOQKurWxmmSFZhBCoQYcRhJ3Y=</pin>
+            &lt;!&ndash; backup pin &ndash;&gt;
+            <pin digest="SHA-256">fwza0LRMXouZHRC8Ei+4PyuldPDcf3UKgO/04cDM1oE=</pin>
+        </pin-set>
+    </domain-config>-->
+
+    <!--3/3调试应用程序网络连接-->
+    <!--<debug-overrides>
+        <trust-anchors>
+            <certificates src="@raw/debug_cas"/>
+        </trust-anchors>
+    </debug-overrides>-->
+
+</network-security-config>

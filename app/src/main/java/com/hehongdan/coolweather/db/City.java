@@ -3,6 +3,7 @@ package com.hehongdan.coolweather.db;
 import org.litepal.crud.DataSupport;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 类描述：城市。
@@ -12,6 +13,7 @@ import lombok.Data;
  * @date 2019/11/16
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class City extends DataSupport {
 
     private int id;
