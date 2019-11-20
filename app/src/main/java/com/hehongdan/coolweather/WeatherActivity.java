@@ -13,6 +13,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.bumptech.glide.Glide;
 import com.hehongdan.coolweather.gson.Forecast;
 import com.hehongdan.coolweather.gson.Weather;
@@ -58,6 +60,8 @@ public class WeatherActivity extends BaseActivity {
     private TextView sportText;
     /** 显示必应背景图。 */
     private ImageView bingPicImg;
+    /** 刷新进度条。 */
+    private SwipeRefreshLayout swipeRefresh;
 
 
     @Override
@@ -71,6 +75,8 @@ public class WeatherActivity extends BaseActivity {
         }
         setContentView(R.layout.activity_weather);
 
+        swipeRefresh = findViewById(R.id.swipe_refresh);
+        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         bingPicImg = findViewById(R.id.bing_pic_img);
         weatherLayout = findViewById(R.id.weather_layout);
         titleCity = findViewById(R.id.title_city);
@@ -85,13 +91,15 @@ public class WeatherActivity extends BaseActivity {
         sportText = findViewById(R.id.sport_text);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = sharedPreferences.getString("weather", null);
+        final String weatherId;
         if (weatherString != null) {
             //有本地缓存时注解解析天气数据
             Weather weather = Utility.handleWeatherResponse(weatherString);
+            weatherId = weather.basic.weatherId;
             showWeatherInfo(weather);
         } else {
             //无本地缓存时去服务器查询天气数据
-            String weatherId = getIntent().getStringExtra("weather_id");
+            weatherId = getIntent().getStringExtra("weather_id");
             weatherLayout.setVisibility(View.INVISIBLE);
             requestWeather(weatherId);
         }
@@ -101,6 +109,12 @@ public class WeatherActivity extends BaseActivity {
         } else {
             loadBingPic();
         }
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                requestWeather(weatherId);
+            }
+        });
 
 
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -133,6 +147,7 @@ public class WeatherActivity extends BaseActivity {
                     @Override
                     public void run() {
                         Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
+                        swipeRefresh.setRefreshing(false);
                     }
                 });
             }
@@ -152,6 +167,7 @@ public class WeatherActivity extends BaseActivity {
                         } else {
                             Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
                         }
+                        swipeRefresh.setRefreshing(false);
                     }
                 });
             }
