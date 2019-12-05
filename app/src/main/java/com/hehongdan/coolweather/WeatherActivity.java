@@ -7,12 +7,15 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
@@ -36,6 +39,10 @@ import okhttp3.Response;
  */
 public class WeatherActivity extends BaseActivity {
 
+    /** 选择天气归属地的抽屉视图。 */
+    public DrawerLayout drawerLayout;
+    /** 主页（房子）按钮。 */
+    private Button navButton;
     /** 滑动视图。 */
     private ScrollView weatherLayout;
     /** 标题。 */
@@ -61,7 +68,7 @@ public class WeatherActivity extends BaseActivity {
     /** 显示必应背景图。 */
     private ImageView bingPicImg;
     /** 刷新进度条。 */
-    private SwipeRefreshLayout swipeRefresh;
+    public SwipeRefreshLayout swipeRefresh;
 
 
     @Override
@@ -75,20 +82,22 @@ public class WeatherActivity extends BaseActivity {
         }
         setContentView(R.layout.activity_weather);
 
-        swipeRefresh = findViewById(R.id.swipe_refresh);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navButton = (Button) findViewById(R.id.nav_button);
+        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
-        bingPicImg = findViewById(R.id.bing_pic_img);
-        weatherLayout = findViewById(R.id.weather_layout);
-        titleCity = findViewById(R.id.title_city);
-        titleUpdateTime = findViewById(R.id.title_update_time);
-        degreeText = findViewById(R.id.degree_text);
-        weatherInfoText = findViewById(R.id.weather_info_text);
-        forecastLayout = findViewById(R.id.forecast_layout);
-        aqiText = findViewById(R.id.aqi_text);
-        pm25Text = findViewById(R.id.pm25_text);
-        comfortText = findViewById(R.id.comfort_text);
-        carWashText = findViewById(R.id.car_wash_text);
-        sportText = findViewById(R.id.sport_text);
+        bingPicImg = (ImageView) findViewById(R.id.bing_pic_img);
+        weatherLayout = (ScrollView) findViewById(R.id.weather_layout);
+        titleCity = (TextView) findViewById(R.id.title_city);
+        titleUpdateTime = (TextView) findViewById(R.id.title_update_time);
+        degreeText = (TextView) findViewById(R.id.degree_text);
+        weatherInfoText = (TextView) findViewById(R.id.weather_info_text);
+        forecastLayout = (LinearLayout) findViewById(R.id.forecast_layout);
+        aqiText = (TextView) findViewById(R.id.aqi_text);
+        pm25Text = (TextView) findViewById(R.id.pm25_text);
+        comfortText = (TextView) findViewById(R.id.comfort_text);
+        carWashText = (TextView) findViewById(R.id.car_wash_text);
+        sportText = (TextView) findViewById(R.id.sport_text);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = sharedPreferences.getString("weather", null);
         final String weatherId;
@@ -103,12 +112,6 @@ public class WeatherActivity extends BaseActivity {
             weatherLayout.setVisibility(View.INVISIBLE);
             requestWeather(weatherId);
         }
-        String bingPic = sharedPreferences.getString("bing_pic", null);
-        if (bingPic != null) {
-            Glide.with(this).load(bingPic).into(bingPicImg);
-        } else {
-            loadBingPic();
-        }
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -116,6 +119,19 @@ public class WeatherActivity extends BaseActivity {
             }
         });
 
+        navButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
+        String bingPic = sharedPreferences.getString("bing_pic", null);
+        if (bingPic != null) {
+            Glide.with(this).load(bingPic).into(bingPicImg);
+        } else {
+            loadBingPic();
+        }
 
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
         int resourceId_ = getResources().getIdentifier("floating_toolbar_menu_image_width", "dimen", "android");
@@ -241,6 +257,5 @@ public class WeatherActivity extends BaseActivity {
             }
         });
     }
-
 
 }

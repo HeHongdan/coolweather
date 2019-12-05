@@ -102,10 +102,28 @@ public class ChooseAreaFragment extends BaseFragment {
                     queryCounties();
                 } else if (currentLevel == LEVEL_COUNTY) {
                     String weatherId = countyList.get(position).getWeatherId();
-                    Intent intent = new Intent(getActivity(), WeatherActivity.class);
-                    intent.putExtra("weather_id", weatherId);
-                    startActivity(intent);
-                    getActivity().finish();
+                    if (getActivity() instanceof MainActivity) {
+                        Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                        intent.putExtra("weather_id", weatherId);
+                        startActivity(intent);
+                        getActivity().finish();
+                    } else if (getActivity() instanceof WeatherActivity) {
+                        WeatherActivity activity = (WeatherActivity) getActivity();
+                        activity.drawerLayout.closeDrawers();
+                        activity.swipeRefresh.setRefreshing(true);
+                        activity.requestWeather(weatherId);
+                    }
+
+                }
+            }
+        });
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentLevel == LEVEL_COUNTY) {
+                    queryCities();
+                } else if (currentLevel == LEVEL_CITY) {
+                    queryProvinces();
                 }
             }
         });
@@ -187,7 +205,7 @@ public class ChooseAreaFragment extends BaseFragment {
      * @param type    类型。
      */
     private void queryFromServer(String address, final String type) {
-        hhdLog.d("请求服务器的地址=" + address+"，请求类型=" + type);
+        hhdLog.d("请求服务器的地址=" + address + "，请求类型=" + type);
         showProgressDialog();
 
         HttpUtil.sendOkHttpRequest(address, new Callback() {
